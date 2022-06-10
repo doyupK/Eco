@@ -36,6 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-
 ### Secret Data ###
 src/main/resources/application.properties
