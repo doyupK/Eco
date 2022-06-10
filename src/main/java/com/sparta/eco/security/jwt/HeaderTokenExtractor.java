@@ -1,4 +1,4 @@
-package com.sparta.springcore.security.jwt;
+package com.sparta.eco.security.jwt;
 
 import org.springframework.stereotype.Component;
 

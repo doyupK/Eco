@@ -1,4 +1,4 @@
-package com.sparta.springcore.security.jwt;
+package com.sparta.eco.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.sparta.springcore.security.jwt.JwtTokenUtils.*;
+import static com.sparta.eco.security.jwt.JwtTokenUtils.*;
 
 @Component
 public class JwtDecoder {
@@ -32,11 +32,9 @@ public class JwtDecoder {
             throw new IllegalArgumentException("유효한 토큰이 아닙니다.");
         }
 
-        String username = decodedJWT
+        return decodedJWT
                 .getClaim(CLAIM_USER_NAME)
                 .asString();
-
-        return username;
     }
 
     private Optional<DecodedJWT> isValidToken(String token) {

@@ -1,10 +1,10 @@
-package com.sparta.springcore.security;
+package com.sparta.eco.security;
 
-import com.sparta.springcore.security.filter.FormLoginFilter;
-import com.sparta.springcore.security.filter.JwtAuthFilter;
-import com.sparta.springcore.security.jwt.HeaderTokenExtractor;
-import com.sparta.springcore.security.provider.FormLoginAuthProvider;
-import com.sparta.springcore.security.provider.JWTAuthProvider;
+import com.sparta.eco.security.filter.FormLoginFilter;
+import com.sparta.eco.security.filter.JwtAuthFilter;
+import com.sparta.eco.security.jwt.HeaderTokenExtractor;
+import com.sparta.eco.security.provider.FormLoginAuthProvider;
+import com.sparta.eco.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
