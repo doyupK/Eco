@@ -1,4 +1,4 @@
-package com.sparta.springcore.dto;
+package com.sparta.eco.User.Dto;
 
 import lombok.Getter;
 import lombok.Setter;

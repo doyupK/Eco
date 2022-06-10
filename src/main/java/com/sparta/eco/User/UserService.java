@@ -1,9 +1,8 @@
-package com.sparta.springcore.service;
+package com.sparta.eco.User;
 
-import com.sparta.springcore.dto.SignupRequestDto;
-import com.sparta.springcore.model.User;
-import com.sparta.springcore.model.UserRoleEnum;
-import com.sparta.springcore.repository.UserRepository;
+import com.sparta.eco.User.Dto.SignupRequestDto;
+import com.sparta.eco.domain.User;
+import com.sparta.eco.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import java.util.Optional;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -34,16 +32,8 @@ public class UserService {
         String password = passwordEncoder.encode(requestDto.getPassword());
         String email = requestDto.getEmail();
 
-// 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) {
-            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-            role = UserRoleEnum.ADMIN;
-        }
 
-        User user = new User(username, password, email, role);
+        User user = new User(username, password, email);
         userRepository.save(user);
         return user;
     }
