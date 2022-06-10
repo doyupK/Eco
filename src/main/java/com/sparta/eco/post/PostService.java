@@ -1,7 +1,6 @@
 package com.sparta.eco.post;
 
 import com.sparta.eco.domain.Post;
-import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.domain.repository.UserRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
