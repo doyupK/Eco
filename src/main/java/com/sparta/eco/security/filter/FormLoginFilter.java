@@ -1,4 +1,4 @@
-package com.sparta.springcore.security.filter;
+package com.sparta.eco.security.filter;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;

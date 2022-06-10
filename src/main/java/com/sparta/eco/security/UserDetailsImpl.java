@@ -1,7 +1,6 @@
-package com.sparta.springcore.security;
+package com.sparta.eco.security;
 
-import com.sparta.springcore.model.User;
-import com.sparta.springcore.model.UserRoleEnum;
+import com.sparta.eco.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,15 +51,20 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    @Override
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        UserRoleEnum role = user.getRole();
+//        String authority = role.getAuthority();
+//
+//        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+//        Collection<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(simpleGrantedAuthority);
+//
+//        return authorities;
+//    }
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
-        String authority = role.getAuthority();
-
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
-
-        return authorities;
+        return Collections.emptyList();
     }
+
+
 }

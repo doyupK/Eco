@@ -1,6 +1,7 @@
 package com.sparta.eco.comment;
 
 import com.sparta.eco.domain.Comment;
+import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.CommentRepository;
 import com.sparta.eco.domain.repository.UserRepository;
 import com.sparta.eco.comment.Dto.CommentRequestDto;
