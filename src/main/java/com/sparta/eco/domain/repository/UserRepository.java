@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
-<<<<<<< HEAD
-=======
+    Optional<User> findByRealName(String realname);
 
->>>>>>> origin/master
 }

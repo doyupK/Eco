@@ -31,23 +31,9 @@ public class UserService {
 // 패스워드 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
         String email = requestDto.getEmail();
-
-<<<<<<< HEAD
-
-=======
-// 사용자 ROLE 확인
-//        UserRoleEnum role = UserRoleEnum.USER;
-//        if (requestDto.isAdmin()) {
-//            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-//                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-//            }
-//            role = UserRoleEnum.ADMIN;
-//        }
-//
->>>>>>> origin/master
-        User user = new User(username, password, email);
+        String realname = requestDto.getRealname();
+        User user = new User(username, password, email, realname);
         userRepository.save(user);
         return user;
-//    }
     }
 }
