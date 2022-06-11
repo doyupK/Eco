@@ -3,12 +3,12 @@ package com.sparta.eco.User;
 import com.sparta.eco.User.Dto.SignupRequestDto;
 import com.sparta.eco.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserController {
 
@@ -18,14 +18,10 @@ public class UserController {
     @PostMapping("/user/signup")
     public User registerUser(@RequestBody SignupRequestDto signupRequestDto) {
         return userService.registerUser(signupRequestDto);
-
     }
 
     @PostMapping("/user/signup/check")
     public boolean usernameCheck(@RequestBody SignupRequestDto signupRequestDto){
         return userService.usernameCheck(signupRequestDto.getUsername());
     }
-
-
-
 }

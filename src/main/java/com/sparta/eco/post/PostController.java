@@ -1,6 +1,5 @@
 package com.sparta.eco.post;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
@@ -57,10 +56,10 @@ public class PostController {
         return postService.deletePost(id, userDetails);
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
-        return postService.saveImage(multipartFile);
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
+//        return postService.saveImage(multipartFile);
+//    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody

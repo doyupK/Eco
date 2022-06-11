@@ -1,9 +1,5 @@
 package com.sparta.eco.post;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sparta.eco.comment.Dto.CommentDetailResponseDto;
 import com.sparta.eco.domain.Post;
 import com.sparta.eco.domain.User;
@@ -36,10 +32,10 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    private final String S3Bucket = "hanghae-eco-bucket"; // Bucket 이름
+//    private final String S3Bucket = "hanghae-eco-bucket"; // Bucket 이름
 
-    @Autowired
-    AmazonS3Client amazonS3Client;
+//    @Autowired
+//    AmazonS3Client amazonS3Client;
     @Autowired
     public PostService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
@@ -135,32 +131,32 @@ public class PostService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> saveImage(MultipartFile multipartFile) {
-
-        String originalName = multipartFile.getOriginalFilename(); // 파일 이름
-        long size = multipartFile.getSize(); // 파일 크기
-
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(multipartFile.getContentType());
-        objectMetaData.setContentLength(size);
-
-        // S3에 업로드
-        try {
-            amazonS3Client.putObject(
-                    new PutObjectRequest(S3Bucket, originalName, multipartFile.getInputStream(), objectMetaData)
-                            .withCannedAcl(CannedAccessControlList.PublicRead)
-            );
-        } catch (IOException e) {
-            throw new RuntimeException("사진 저장 오류");
-        }
-
-        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
-
-        Message message = new Message();
-        message.setStatus(StatusEnum.OK);
-        message.setMessage("사진 저장 완료");
-        message.setData(imagePath);
-
-        return new ResponseEntity<>(message, HttpStatus.OK);
-    }
+//    public ResponseEntity<Message> saveImage(MultipartFile multipartFile) {
+//
+//        String originalName = multipartFile.getOriginalFilename(); // 파일 이름
+//        long size = multipartFile.getSize(); // 파일 크기
+//
+//        ObjectMetadata objectMetaData = new ObjectMetadata();
+//        objectMetaData.setContentType(multipartFile.getContentType());
+//        objectMetaData.setContentLength(size);
+//
+//        // S3에 업로드
+//        try {
+//            amazonS3Client.putObject(
+//                    new PutObjectRequest(S3Bucket, originalName, multipartFile.getInputStream(), objectMetaData)
+//                            .withCannedAcl(CannedAccessControlList.PublicRead)
+//            );
+//        } catch (IOException e) {
+//            throw new RuntimeException("사진 저장 오류");
+//        }
+//
+//        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
+//
+//        Message message = new Message();
+//        message.setStatus(StatusEnum.OK);
+//        message.setMessage("사진 저장 완료");
+//        message.setData(imagePath);
+//
+//        return new ResponseEntity<>(message, HttpStatus.OK);
+//    }
 }

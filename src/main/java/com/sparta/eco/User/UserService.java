@@ -21,7 +21,7 @@ public class UserService {
             throw new IllegalArgumentException("중복된 아이디가 존재합니다. ");
         }
 
-        if(userRepository.findByRealName(signupRequestDto.getRealname()).isPresent()){
+        if(userRepository.findByRealname(signupRequestDto.getRealname()).isPresent()){
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
 
