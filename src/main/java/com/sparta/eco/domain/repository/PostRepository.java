@@ -7,5 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<PostResponseDtoMapping> findAllByOrderByModifiedAtDesc();
+    List<PostResponseDtoMapping> findAllByOrderByUpdatedAtDesc();
+
+    List<PostResponseDtoMapping> findAllByCategoryOrderByUpdatedAtDesc(String category);
+
 }

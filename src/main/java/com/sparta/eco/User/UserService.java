@@ -30,6 +30,7 @@ public class UserService {
         String email = requestDto.getEmail();
         String username = requestDto.getUsername();
         Message message = new Message();
+
         if(realname.contains(requestDto.getPassword())){
             message.setStatus(StatusEnum.BAD_REQUEST);
             message.setMessage("비밀번호에 아이디가 포함되어 있습니다.");
