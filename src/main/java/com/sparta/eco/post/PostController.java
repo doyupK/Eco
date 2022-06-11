@@ -4,20 +4,17 @@ import com.sparta.eco.domain.Post;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.responseEntity.Message;
-import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
-@RequiredArgsConstructor
+
 @RestController
 public class PostController {
 
@@ -62,7 +59,7 @@ public class PostController {
     }
     @GetMapping("/post/detail/{id}")
     public ResponseEntity<Message> detailPost(@PathVariable Long id) {
-        return postService.getPost(id);
+        return postService.getPostDetail(id);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -70,4 +67,7 @@ public class PostController {
     public ResponseEntity<String> handleNoSuchElementFoundException(IllegalArgumentException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+
+
+
 }

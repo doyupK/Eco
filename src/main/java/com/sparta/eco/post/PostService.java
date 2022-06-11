@@ -1,14 +1,20 @@
 package com.sparta.eco.post;
 
+import com.sparta.eco.comment.Dto.CommentDetailResponseDto;
+import com.sparta.eco.domain.Comment;
 import com.sparta.eco.domain.Post;
 import com.sparta.eco.domain.User;
+import com.sparta.eco.domain.repository.CommentRepository;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.domain.repository.UserRepository;
+import com.sparta.eco.post.Dto.PostDetailResponseDto;
 import com.sparta.eco.post.Dto.PostRequestDto;
+import com.sparta.eco.post.Dto.PostResponseDtoMapping;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,12 +23,19 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-@RequiredArgsConstructor
+
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    @Autowired
+    public PostService(PostRepository postRepository, UserRepository userRepository, CommentRepository commentRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+    }
 
     @Transactional
     public ResponseEntity<Message> update(Long id, PostRequestDto requestDto, UserDetailsImpl userDetails) {
@@ -57,21 +70,29 @@ public class PostService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> getPost(Long id) {
+    public ResponseEntity<Message> getPostDetail(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("게시글이 존재 하지 않습니다.")
         );
+        List<CommentDetailResponseDto> comment = commentRepository.findAllByPostOrderByModifiedAtDesc(post);
+        PostDetailResponseDto postDetailResponseDto = new PostDetailResponseDto();
+        postDetailResponseDto.setUsername(post.getUsername());
+        postDetailResponseDto.setTitle(post.getTitle());
+        postDetailResponseDto.setContents(post.getContents());
+        postDetailResponseDto.setImgUrl(post.getFileUrl());
+        postDetailResponseDto.setComments(comment);
 
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
-        message.setData(post);
+        message.setData(postDetailResponseDto);
 
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     public ResponseEntity<Message> getPosts() {
-        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+        List<PostResponseDtoMapping> posts = postRepository.findAllByOrderByModifiedAtDesc();
+
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
