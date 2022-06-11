@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Entity(name = "User_table")
 public class User {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
@@ -24,20 +24,21 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    private String realname;
+
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String realName;
-
-    public User(SignupRequestDto signupRequestDto, String enPassword){
+    public User(SignupRequestDto signupRequestDto, String password) {
 
         //유효성검사
         UserValidator.signupValidate(signupRequestDto);
 
         this.username = signupRequestDto.getUsername();
-        this.password = enPassword;
+        this.password = password;
+        this.realname = signupRequestDto.getRealname();
         this.email = signupRequestDto.getEmail();
-        this.realName = signupRequestDto.getRealname();
+
     }
 }
