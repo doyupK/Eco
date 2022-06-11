@@ -26,4 +26,14 @@ public class RestApiExceptionHandler {
         return new ResponseEntity<>(restApiException, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = { RuntimeException.class })
+    public ResponseEntity<Object> handleApiRequestException(RuntimeException ex) {
+        RestApiException restApiException = new RestApiException();
+        restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
+        restApiException.setErrorMessage(ex.getMessage());
+
+        return new ResponseEntity<>(restApiException, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

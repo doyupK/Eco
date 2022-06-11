@@ -4,14 +4,17 @@ import com.sparta.eco.post.Dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor // 기본생성자를 만듭니다.
 @Setter
 @Getter
 @Entity(name = "post_table") // 테이블과 연계됨을 스프링에게 알려줍니다.
-public class Post extends Timestamped { // 생성,수정 시간을 자동으로 만들어줍니다.
+public class Post { // 생성,수정 시간을 자동으로 만들어줍니다.
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -31,6 +34,14 @@ public class Post extends Timestamped { // 생성,수정 시간을 자동으로 
 
     @Column(nullable = false)
     private String fileUrl;
+
+    @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
 
 
