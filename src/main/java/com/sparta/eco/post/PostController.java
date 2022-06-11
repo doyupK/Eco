@@ -1,65 +1,65 @@
 package com.sparta.eco.post;
 
-import com.sparta.eco.domain.Post;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Objects;
+import java.util.List;
 
 
 @RestController
 public class PostController {
 
-    private final PostRepository postRepository;
     private final PostService postService;
 
+
     @Autowired
-    public PostController(PostService postService, PostRepository postRepository) {
+    public PostController(PostService postService) {
         this.postService = postService;
-        this.postRepository = postRepository;
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<Message> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPosts(userDetails);
+    }
+
+    @GetMapping("/post/{category}/{id}")
+    public ResponseEntity<Message> detailPost(@PathVariable String category, @PathVariable Long id) {
+        return postService.getPostDetail(id);
+    }
+
+    @GetMapping("/post/{category}")
+    public ResponseEntity<Message> detailPost(@PathVariable String category) {
+        return postService.getPostCategory(category);
     }
 
     @PostMapping("/post/add")
-    @ResponseBody
     public ResponseEntity<Message> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.save(requestDto, userDetails);
     }
 
-    @GetMapping("/posts")
-    @ResponseBody
-    public ResponseEntity<Message> getPosts() {
-        return postService.getPosts();
-    }
-
-    @PutMapping("/api/posts/{id}")
-    @ResponseBody
+    @PutMapping("/post/{category}/{id}")
     public ResponseEntity<Message> updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.update(id, requestDto, userDetails);
     }
 
-    @DeleteMapping("/api/posts/{id}")
-    @ResponseBody
-    public Long deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("게시글이 존재하지 않습니다.")
-        );
-        if(!Objects.equals(post.getUsername(), userDetails.getUsername())){
-            throw new IllegalArgumentException("작성자 정보와 틀립니다..");
-        }
-        postRepository.deleteById(id);
-        return id;
+    @DeleteMapping("/post/{category}/{id}")
+    public ResponseEntity<Message> deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(id, userDetails);
     }
-    @GetMapping("/post/detail/{id}")
-    public ResponseEntity<Message> detailPost(@PathVariable Long id) {
-        return postService.getPostDetail(id);
+
+    @PostMapping("/upload")
+    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
+        return postService.saveImage(multipartFile);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -67,7 +67,5 @@ public class PostController {
     public ResponseEntity<String> handleNoSuchElementFoundException(IllegalArgumentException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
-
-
 
 }
