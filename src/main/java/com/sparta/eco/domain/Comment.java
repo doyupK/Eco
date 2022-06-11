@@ -1,5 +1,6 @@
 package com.sparta.eco.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.eco.comment.Dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,8 @@ public class Comment extends Timestamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @JsonIgnore
     private Long id;
-
-    @Column(nullable = false)
-    private Long postid;
 
     @Column(nullable = false)
     private String username;
@@ -31,13 +30,12 @@ public class Comment extends Timestamped {
     private Post post;
 
     public Comment(CommentRequestDto requestDto) {
-        this.postid = requestDto.getPostid();
         this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
+        this.post = requestDto.getPost();
     }
 
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
-
     }
 }
