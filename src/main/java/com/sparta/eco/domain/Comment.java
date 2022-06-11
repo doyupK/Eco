@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@Entity
+@Entity(name = "comment_table")
 public class Comment extends Timestamped {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,10 @@ public class Comment extends Timestamped {
 
     @Column(nullable = false)
     private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "POST_ID", nullable = false)
+    private Post post;
 
     public Comment(CommentRequestDto requestDto) {
         this.postid = requestDto.getPostid();

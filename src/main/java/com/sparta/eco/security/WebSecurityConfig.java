@@ -7,6 +7,7 @@ import com.sparta.eco.security.provider.FormLoginAuthProvider;
 import com.sparta.eco.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -77,6 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
+                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**")
+                .permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
@@ -128,6 +131,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/basic.js");
 
         skipPathList.add("GET,/favicon.ico");
+        skipPathList.add("POST,/upload");
+        skipPathList.add("GET,/test");
+        skipPathList.add("GET,/posts");
+//        skipPathList.add("POST,/post/add");
+
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
