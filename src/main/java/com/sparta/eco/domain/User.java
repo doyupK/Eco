@@ -19,8 +19,12 @@ public class User {
 
     // nullable: null 허용 여부
 // unique: 중복 허용 여부 (false 일때 중복 허용)
+
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false, unique = true)
+    private String realname;
 
     @Column(nullable = false)
     private String password;
@@ -30,8 +34,10 @@ public class User {
 
 
 
-    public User(String username, String password, String email) {
-        this.username = username;
+
+    public User(String userid, String username, String password, String email) {
+        this.username = userid;
+        this.realname = username;
         this.password = password;
         this.email = email;
     }

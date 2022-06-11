@@ -17,7 +17,7 @@ public class RestApiExceptionHandler {
         return new ResponseEntity<>(restApiException, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class })
+    @ExceptionHandler(value = { NullPointerException.class })
     public ResponseEntity<Object> handleApiRequestException(NullPointerException ex) {
         RestApiException restApiException = new RestApiException();
         restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
