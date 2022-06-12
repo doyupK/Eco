@@ -11,6 +11,7 @@ public class UserValidator {
         String username = signupRequestDto.getUsername();
         String password = signupRequestDto.getPassword();
 
+
         if(!Pattern.matches("^[a-zA-Z0-9]{3,}$", signupRequestDto.getUsername())){
             throw new IllegalArgumentException("아이디는 3자리이상인 영문,숫자로만 입력이 가능랍니다.");
         }

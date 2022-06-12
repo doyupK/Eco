@@ -1,11 +1,14 @@
 package com.sparta.eco.User;
 
 import com.sparta.eco.User.Dto.SignupRequestDto;
+import com.sparta.eco.User.Dto.UsernameCheckDto;
 import com.sparta.eco.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
 
 
 @RestController
@@ -21,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/user/signup/check")
-    public boolean usernameCheck(@RequestBody SignupRequestDto signupRequestDto){
-        return userService.usernameCheck(signupRequestDto.getUsername());
+    public String usernameCheck(@RequestBody UsernameCheckDto usernameCheckDto){
+        return userService.usernameCheck(usernameCheckDto);
     }
 }
