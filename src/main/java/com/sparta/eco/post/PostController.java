@@ -29,32 +29,32 @@ public class PostController {
         return postService.getPosts(userDetails);
     }
 
-    @GetMapping("/post/{category}/{id}")
+    @GetMapping("/posts/{category}/{id}")
     public ResponseEntity<Message> detailPost(@PathVariable String category, @PathVariable Long id) {
         return postService.getPostDetail(id);
     }
 
-    @GetMapping("/post/{category}")
+    @GetMapping("/posts/{category}")
     public ResponseEntity<Message> detailPost(@PathVariable String category) {
         return postService.getPostCategory(category);
     }
 
-    @PostMapping("/post/add")
+    @PostMapping("/posts/add")
     public ResponseEntity<Message> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.save(requestDto, userDetails);
     }
 
-    @PutMapping("/post/{category}/{id}")
+    @PutMapping("/posts/{category}/{id}")
     public ResponseEntity<Message> updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.update(id, requestDto, userDetails);
     }
 
-    @DeleteMapping("/post/{category}/{id}")
+    @DeleteMapping("/posts/{category}/{id}")
     public ResponseEntity<Message> deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.deletePost(id, userDetails);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/posts/upload")
     public ResponseEntity<Message> upload(MultipartFile multipartFile) {
         return postService.saveImage(multipartFile);
     }

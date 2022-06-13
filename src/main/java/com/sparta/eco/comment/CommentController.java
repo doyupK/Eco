@@ -21,7 +21,7 @@ public class CommentController {
 
 
 
-    @PostMapping("/post/java/{id}/comment")
+    @PostMapping("/posts/{id}/comment")
     public ResponseEntity<Message> createComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         if(userDetails==null){
@@ -34,11 +34,11 @@ public class CommentController {
         return commentService.save(id, requestDto, userDetails);
     }
 
-    @PutMapping("/post/java/{id}/comment/{commentid}")
+    @PutMapping("/posts/{id}/{commentid}")
     public ResponseEntity<Message> updateMemo(@PathVariable Long id,@PathVariable Long commentid, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.update(id, requestDto, userDetails, commentid);
     }
-    @DeleteMapping("/post/java/{id}/comment/{commentid}")
+    @DeleteMapping("/posts/{id}/{commentid}")
     public ResponseEntity<Message> deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentid) {
         return commentService.deleteComment(id,commentid, userDetails);
     }
