@@ -1,6 +1,5 @@
 package com.sparta.eco.post;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
