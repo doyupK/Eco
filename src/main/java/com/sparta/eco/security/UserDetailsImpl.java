@@ -29,6 +29,9 @@ public class UserDetailsImpl implements UserDetails {
         return user.getUsername();
     }
 
+//    @Override
+//    public String getRealname() { return user.getRealName(); }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -64,5 +67,6 @@ public class UserDetailsImpl implements UserDetails {
         return Collections.emptyList();
     }
 
-
+    public String getRealname() {return user.getRealName();
+    }
 }
