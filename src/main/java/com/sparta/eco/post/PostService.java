@@ -17,6 +17,7 @@ import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,7 +37,8 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    private final String S3Bucket = "hanghae-eco-bucket"; // Bucket 이름
+    @Value("${S3Bucket}")
+    private String S3Bucket;
 
     @Autowired
     AmazonS3Client amazonS3Client;
@@ -103,7 +105,6 @@ public class PostService {
         List<PostResponseDtoMapping> posts = postRepository.findAllByOrderByUpdatedAtDesc();
 
         Message message = new Message();
-        if (userDetails != null){ message.setRealName(userDetails.getUsername());}
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
         message.setData(posts);

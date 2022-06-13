@@ -38,4 +38,3 @@ out/
 
 ### Secret Data ###
 src/main/resources/application.properties
-src/main/java/com/sparta/eco/file/AWSConfig.java
