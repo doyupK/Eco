@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**","/user/signup/check")
+                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**")
                 .permitAll()
                 .anyRequest()
                 .permitAll()
@@ -127,15 +127,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 회원 관리 API 허용
         skipPathList.add("GET,/user/**");
         skipPathList.add("POST,/user/signup");
+        skipPathList.add("POST,/user/signup/check");
 
         skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");
 
         skipPathList.add("GET,/favicon.ico");
-        skipPathList.add("POST,/upload");
-        skipPathList.add("GET,/test");
         skipPathList.add("GET,/posts");
-//        skipPathList.add("POST,/post/add");
 
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
