@@ -1,7 +1,5 @@
 package com.sparta.eco.post;
 
-import com.sparta.eco.domain.User;
-import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.security.UserDetailsImpl;
@@ -12,7 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+
 
 
 @RestController
@@ -62,7 +60,6 @@ public class PostController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseBody
     public ResponseEntity<String> handleNoSuchElementFoundException(IllegalArgumentException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
