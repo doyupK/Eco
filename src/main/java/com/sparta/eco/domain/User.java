@@ -25,19 +25,16 @@ public class User {
     private String password;
 
     @Column(nullable = false, unique = true)
-    private String realname;
+    private String realName;
 
     @Column(nullable = false)
     private String email;
 
     public User(SignupRequestDto signupRequestDto, String password) {
 
-        //유효성검사
-        UserValidator.signupValidate(signupRequestDto);
-
         this.username = signupRequestDto.getUsername();
         this.password = password;
-        this.realname = signupRequestDto.getRealname();
+        this.realName = signupRequestDto.getRealName();
         this.email = signupRequestDto.getEmail();
 
     }

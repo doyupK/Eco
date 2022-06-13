@@ -56,10 +56,10 @@ public class PostController {
         return postService.deletePost(id, userDetails);
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
-//        return postService.saveImage(multipartFile);
-//    }
+    @PostMapping("/upload")
+    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
+        return postService.saveImage(multipartFile);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody

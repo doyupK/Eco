@@ -1,6 +1,6 @@
 package com.sparta.eco.comment;
 
-import com.sparta.eco.comment.Dto.CommentDetailResponseDto;
+
 import com.sparta.eco.comment.Dto.CommentRequestDto;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.security.UserDetailsImpl;
