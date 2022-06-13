@@ -57,6 +57,8 @@ public class UserService {
             message.setMessage("중복된 아이디가 존재합니다.");
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
+        message.setStatus(StatusEnum.OK);
+        message.setMessage("중복된 아이디가 없습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

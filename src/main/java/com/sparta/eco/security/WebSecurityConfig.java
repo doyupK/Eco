@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**")
+                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**","/user/signup/check")
                 .permitAll()
                 .anyRequest()
                 .permitAll()
