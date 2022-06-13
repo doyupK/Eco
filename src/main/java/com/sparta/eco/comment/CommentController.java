@@ -4,6 +4,9 @@ package com.sparta.eco.comment;
 import com.sparta.eco.comment.Dto.CommentRequestDto;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,14 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+
+    @Operation(summary = "test hello", description = "hello api example")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
 
 
     @PostMapping("/posts/{id}/comment")

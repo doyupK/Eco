@@ -3,6 +3,9 @@ package com.sparta.eco.post;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,15 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
+    @Operation(summary = "test hello", description = "hello api example")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK !!"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST !!"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND !!"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR !!")
+    })
+
 
     @GetMapping("/posts")
     public ResponseEntity<Message> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {

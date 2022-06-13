@@ -6,6 +6,7 @@ import com.sparta.eco.security.jwt.HeaderTokenExtractor;
 import com.sparta.eco.security.provider.FormLoginAuthProvider;
 import com.sparta.eco.security.provider.JWTAuthProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthProvider jwtAuthProvider;
     private final HeaderTokenExtractor headerTokenExtractor;
+    private static final String[] DOC_URLS = {
+            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
+    };
 
     public WebSecurityConfig(
             JWTAuthProvider jwtAuthProvider,
@@ -54,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .and().ignoring().antMatchers(DOC_URLS);
         web
                 .ignoring()
                 .antMatchers("/h2-console/**");
@@ -134,7 +140,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
         skipPathList.add("GET,/posts");
-
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
