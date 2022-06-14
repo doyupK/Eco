@@ -10,13 +10,16 @@ import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.CommentRepository;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.domain.repository.UserRepository;
+import com.sparta.eco.post.Dto.FileDataDto;
 import com.sparta.eco.post.Dto.PostDetailResponseDto;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.post.Dto.PostResponseDtoMapping;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,7 +39,8 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    private final String S3Bucket = "hanghae-eco-bucket"; // Bucket 이름
+    @Value("${S3Bucket}")
+    private String S3Bucket;
 
     @Autowired
     AmazonS3Client amazonS3Client;
@@ -64,13 +68,19 @@ public class PostService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<Message> save(PostRequestDto requestDto, MultipartFile multipartFile, UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다. 로그인 후 시도해주세요. ")
         );
+
+
         Message message = new Message();
         if (user != null) {
+            FileDataDto fileDataDto = saveImage(multipartFile);
+
             requestDto.setUsername(userDetails.getUsername());
+            requestDto.setFileName(fileDataDto.getImageName());
+            requestDto.setFileUrl(fileDataDto.getImagePath());
             Post post = new Post(requestDto);
             postRepository.save(post);
             message.setStatus(StatusEnum.OK);
@@ -103,7 +113,6 @@ public class PostService {
         List<PostResponseDtoMapping> posts = postRepository.findAllByOrderByUpdatedAtDesc();
 
         Message message = new Message();
-        if (userDetails != null){ message.setRealName(userDetails.getUsername());}
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
         message.setData(posts);
@@ -129,16 +138,20 @@ public class PostService {
         }
         postRepository.deleteById(id);
 
+        // S3 파일 삭제
+        amazonS3Client.deleteObject(S3Bucket,post.getFileName());
+
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("삭제 성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> saveImage(MultipartFile multipartFile) {
-
-        String originalName = multipartFile.getOriginalFilename(); // 파일 이름
-        long size = multipartFile.getSize(); // 파일 크기
+    public FileDataDto saveImage(MultipartFile multipartFile) {
+        // 파일 이름
+        String originalName = DateTime.now().toString().replaceAll("[+:]",".")+multipartFile.getOriginalFilename();
+        // 파일 크기
+        long size = multipartFile.getSize();
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(multipartFile.getContentType());
@@ -153,14 +166,16 @@ public class PostService {
         } catch (IOException e) {
             throw new RuntimeException("사진 저장 오류");
         }
+        FileDataDto fileDataDto = new FileDataDto();
+        // 접근가능한 URL 가져오기
+        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString();
+        fileDataDto.setImageName(originalName);
+        fileDataDto.setImagePath(imagePath);
 
-        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
-
-        Message message = new Message();
-        message.setStatus(StatusEnum.OK);
-        message.setMessage("사진 저장 완료");
-        message.setData(imagePath);
-
-        return new ResponseEntity<>(message, HttpStatus.OK);
+//        Message message = new Message();
+//        message.setStatus(StatusEnum.OK);
+//        message.setMessage("사진 저장 완료");
+//        message.setData(fileDataDto);
+        return fileDataDto;
     }
 }

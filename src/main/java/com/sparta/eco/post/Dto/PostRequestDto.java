@@ -10,5 +10,6 @@ public class PostRequestDto {
     private String category;
     private String username;
     private String contents;
+    private String fileName;
     private String fileUrl;
 }

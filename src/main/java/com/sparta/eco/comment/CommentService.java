@@ -68,11 +68,6 @@ public class CommentService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-//    public  getComments(Long id) {
-//        Post post = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException("게시글 없음 오류"));
-//
-//        return commentRepository.findAllByPostOrderByUpdatedAtDesc(post);
-//    }
 
     public ResponseEntity<Message> deleteComment(Long id, Long commentid, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("게시글 오류"));
