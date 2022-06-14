@@ -5,7 +5,9 @@ import com.sparta.eco.security.filter.JwtAuthFilter;
 import com.sparta.eco.security.jwt.HeaderTokenExtractor;
 import com.sparta.eco.security.provider.FormLoginAuthProvider;
 import com.sparta.eco.security.provider.JWTAuthProvider;
+import com.sparta.eco.web.WebMvcConfig;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +38,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
     };
 
+    private final WebMvcConfig webMvcConfig;
+
+    @Autowired
     public WebSecurityConfig(
+            WebMvcConfig webMvcConfig,
             JWTAuthProvider jwtAuthProvider,
             HeaderTokenExtractor headerTokenExtractor
     ) {
+        this.webMvcConfig = webMvcConfig;
         this.jwtAuthProvider = jwtAuthProvider;
         this.headerTokenExtractor = headerTokenExtractor;
     }
+
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -67,6 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors();
         http.csrf().disable();
 
         // 서버에서 인증은 JWT로 인증하기 때문에 Session의 생성을 막습니다.
@@ -85,7 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.OPTIONS,"/api/posts/**")
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll()
                 .anyRequest()
                 .permitAll()
@@ -99,6 +109,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 // "접근 불가" 페이지 URL 설정
                 .accessDeniedPage("/forbidden.html");
+
+
+
     }
 
     @Bean
@@ -140,6 +153,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
         skipPathList.add("GET,/posts");
+//        skipPathList.add("POST,/posts/add");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,

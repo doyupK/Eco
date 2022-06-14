@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +52,9 @@ public class PostController {
     public ResponseEntity<Message> detailPost(@PathVariable String category) {
         return postService.getPostCategory(category);
     }
-
+//    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/posts/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Message> createPost(@RequestPart PostRequestDto requestDto,@RequestPart MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Message> createPost(@RequestPart PostRequestDto requestDto, @RequestPart MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.save(requestDto, multipartFile , userDetails);
     }
 
