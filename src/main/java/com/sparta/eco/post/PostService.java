@@ -10,12 +10,14 @@ import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.CommentRepository;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.domain.repository.UserRepository;
+import com.sparta.eco.post.Dto.FileDataDto;
 import com.sparta.eco.post.Dto.PostDetailResponseDto;
 import com.sparta.eco.post.Dto.PostRequestDto;
 import com.sparta.eco.post.Dto.PostResponseDtoMapping;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -130,6 +133,9 @@ public class PostService {
         }
         postRepository.deleteById(id);
 
+        // S3 파일 삭제
+        amazonS3Client.deleteObject(S3Bucket,post.getFileName());
+
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("삭제 성공");
@@ -137,9 +143,10 @@ public class PostService {
     }
 
     public ResponseEntity<Message> saveImage(MultipartFile multipartFile) {
-
-        String originalName = multipartFile.getOriginalFilename(); // 파일 이름
-        long size = multipartFile.getSize(); // 파일 크기
+        // 파일 이름
+        String originalName = DateTime.now().toString().replaceAll("[+:]",".")+multipartFile.getOriginalFilename();
+        // 파일 크기
+        long size = multipartFile.getSize();
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(multipartFile.getContentType());
@@ -154,13 +161,16 @@ public class PostService {
         } catch (IOException e) {
             throw new RuntimeException("사진 저장 오류");
         }
-
-        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
+        FileDataDto fileDataDto = new FileDataDto();
+        // 접근가능한 URL 가져오기
+        String imagePath = amazonS3Client.getUrl(S3Bucket, originalName).toString();
+        fileDataDto.setImageName(originalName);
+        fileDataDto.setImagePath(imagePath);
 
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("사진 저장 완료");
-        message.setData(imagePath);
+        message.setData(fileDataDto);
 
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
