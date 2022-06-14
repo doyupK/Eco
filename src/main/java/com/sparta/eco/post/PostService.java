@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,13 +68,19 @@ public class PostService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<Message> save(PostRequestDto requestDto, MultipartFile multipartFile, UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다. 로그인 후 시도해주세요. ")
         );
+
+
         Message message = new Message();
         if (user != null) {
+            FileDataDto fileDataDto = saveImage(multipartFile);
+
             requestDto.setUsername(userDetails.getUsername());
+            requestDto.setFileName(fileDataDto.getImageName());
+            requestDto.setFileUrl(fileDataDto.getImagePath());
             Post post = new Post(requestDto);
             postRepository.save(post);
             message.setStatus(StatusEnum.OK);
@@ -142,7 +147,7 @@ public class PostService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    public ResponseEntity<Message> saveImage(MultipartFile multipartFile) {
+    public FileDataDto saveImage(MultipartFile multipartFile) {
         // 파일 이름
         String originalName = DateTime.now().toString().replaceAll("[+:]",".")+multipartFile.getOriginalFilename();
         // 파일 크기
@@ -167,11 +172,10 @@ public class PostService {
         fileDataDto.setImageName(originalName);
         fileDataDto.setImagePath(imagePath);
 
-        Message message = new Message();
-        message.setStatus(StatusEnum.OK);
-        message.setMessage("사진 저장 완료");
-        message.setData(fileDataDto);
-
-        return new ResponseEntity<>(message, HttpStatus.OK);
+//        Message message = new Message();
+//        message.setStatus(StatusEnum.OK);
+//        message.setMessage("사진 저장 완료");
+//        message.setData(fileDataDto);
+        return fileDataDto;
     }
 }
