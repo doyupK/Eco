@@ -45,11 +45,11 @@ public class CommentController {
         return commentService.save(id, requestDto, userDetails);
     }
 
-    @PutMapping("/posts/{id}/{commentid}")
+    @PutMapping("/posts/{id}/comments/{commentid}")
     public ResponseEntity<Message> updateMemo(@PathVariable Long id,@PathVariable Long commentid, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.update(id, requestDto, userDetails, commentid);
     }
-    @DeleteMapping("/posts/{id}/{commentid}")
+    @DeleteMapping("/posts/{id}/comments/{commentid}")
     public ResponseEntity<Message> deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentid) {
         return commentService.deleteComment(id,commentid, userDetails);
     }

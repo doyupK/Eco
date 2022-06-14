@@ -32,6 +32,9 @@ public class Post { // 생성,수정 시간을 자동으로 만들어줍니다.
     @Column(nullable = false)
     private String contents;
 
+    @Column
+    private String fileName;
+
     @Column(nullable = false)
     private String fileUrl;
 
@@ -49,6 +52,7 @@ public class Post { // 생성,수정 시간을 자동으로 만들어줍니다.
         this.title = requestDto.getTitle();
         this.category = requestDto.getCategory();
         this.username = requestDto.getUsername();
+        this.fileName = requestDto.getFileName();
         this.contents = requestDto.getContents();
         this.fileUrl = requestDto.getFileUrl();
     }

@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +52,10 @@ public class PostController {
     public ResponseEntity<Message> detailPost(@PathVariable String category) {
         return postService.getPostCategory(category);
     }
-
-    @PostMapping("/posts/add")
-    public ResponseEntity<Message> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.save(requestDto, userDetails);
+//    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping(value = "/posts/add", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Message> createPost(@RequestPart PostRequestDto requestDto, @RequestPart MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.save(requestDto, multipartFile , userDetails);
     }
 
     @PutMapping("/posts/{category}/{id}")
@@ -66,10 +68,10 @@ public class PostController {
         return postService.deletePost(id, userDetails);
     }
 
-    @PostMapping("/posts/upload")
-    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
-        return postService.saveImage(multipartFile);
-    }
+//    @PostMapping("/posts/upload")
+//    public ResponseEntity<Message> upload(MultipartFile multipartFile) {
+//        return postService.saveImage(multipartFile);
+//    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleNoSuchElementFoundException(IllegalArgumentException exception) {
