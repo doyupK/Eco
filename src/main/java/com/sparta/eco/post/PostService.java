@@ -10,10 +10,7 @@ import com.sparta.eco.domain.User;
 import com.sparta.eco.domain.repository.CommentRepository;
 import com.sparta.eco.domain.repository.PostRepository;
 import com.sparta.eco.domain.repository.UserRepository;
-import com.sparta.eco.post.Dto.FileDataDto;
-import com.sparta.eco.post.Dto.PostDetailResponseDto;
-import com.sparta.eco.post.Dto.PostRequestDto;
-import com.sparta.eco.post.Dto.PostResponseDtoMapping;
+import com.sparta.eco.post.Dto.*;
 import com.sparta.eco.responseEntity.Message;
 import com.sparta.eco.responseEntity.StatusEnum;
 import com.sparta.eco.security.UserDetailsImpl;
@@ -54,10 +51,12 @@ public class PostService {
     @Transactional
     public ResponseEntity<Message> update(Long id, PostRequestDto requestDto, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         if(Objects.equals(post.getUsername(), userDetails.getUsername())){
             requestDto.setUsername(userDetails.getUsername());
+            requestDto.setFileUrl(post.getFileUrl());
+            requestDto.setFileName(post.getFileName());
             post.update(requestDto);
         }
         else throw new IllegalArgumentException("작성자와 로그인 정보가 다릅니다.");
@@ -69,10 +68,10 @@ public class PostService {
     }
 
     public ResponseEntity<Message> save(PostRequestDto requestDto, MultipartFile multipartFile, UserDetailsImpl userDetails) {
+        if(userDetails==null){ throw new IllegalArgumentException("로그인이 필요한 서비스 입니다.");}
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다. 로그인 후 시도해주세요. ")
         );
-
 
         Message message = new Message();
         if (user != null) {
@@ -94,8 +93,12 @@ public class PostService {
                 () -> new NullPointerException("게시글이 존재 하지 않습니다.")
         );
         List<CommentDetailResponseDto> comment = commentRepository.findAllByPostOrderByUpdatedAtDesc(post);
+
+
         PostDetailResponseDto postDetailResponseDto = new PostDetailResponseDto();
+        postDetailResponseDto.setId(post.getId());
         postDetailResponseDto.setUsername(post.getUsername());
+        postDetailResponseDto.setCategory(post.getCategory());
         postDetailResponseDto.setTitle(post.getTitle());
         postDetailResponseDto.setContents(post.getContents());
         postDetailResponseDto.setImgUrl(post.getFileUrl());
@@ -104,7 +107,7 @@ public class PostService {
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
-        message.setData(postDetailResponseDto);
+        message.setResult(postDetailResponseDto);
 
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -115,7 +118,7 @@ public class PostService {
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
-        message.setData(posts);
+        message.setResult(posts);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -125,7 +128,7 @@ public class PostService {
         Message message = new Message();
         message.setStatus(StatusEnum.OK);
         message.setMessage("OK");
-        message.setData(posts);
+        message.setResult(posts);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
