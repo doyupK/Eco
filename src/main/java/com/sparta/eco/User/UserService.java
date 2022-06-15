@@ -31,12 +31,6 @@ public class UserService {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 
-        if(userRepository.findByRealName(signupRequestDto.getRealName()).isPresent()){
-            message.setStatus(StatusEnum.BAD_REQUEST);
-            message.setMessage("중복된 사용자가 포함되어 있습니다.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        }
-
         ResponseEntity<Message> validator = UserValidator.signupValidate(signupRequestDto);
 
         if(validator.getStatusCode().equals(HttpStatus.OK)){
