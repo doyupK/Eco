@@ -8,7 +8,9 @@ import java.util.List;
 
 @Data
 public class PostDetailResponseDto {
+    Long id;
     String title;
+    String category;
     String username;
     String contents;
     String imgUrl;

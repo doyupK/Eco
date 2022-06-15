@@ -6,12 +6,15 @@ import com.sparta.eco.security.UserDetailsImpl;
 import com.sparta.eco.security.jwt.JwtDecoder;
 import com.sparta.eco.security.jwt.JwtPreProcessingToken;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Component
 @RequiredArgsConstructor
@@ -36,5 +39,10 @@ public class JWTAuthProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         return JwtPreProcessingToken.class.isAssignableFrom(authentication);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleNoSuchElementFoundException(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }

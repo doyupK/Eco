@@ -1,6 +1,7 @@
 package com.sparta.eco.domain.repository;
 
 import com.sparta.eco.domain.Post;
+import com.sparta.eco.post.Dto.PostDetailResponseDtoMapping;
 import com.sparta.eco.post.Dto.PostResponseDtoMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 
