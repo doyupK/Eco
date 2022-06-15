@@ -28,9 +28,15 @@ public class UserValidator {
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 
-        if(password.length() < 4){
+        if(!Pattern.matches("^[a-zA-Z0-9]{6,}$", signupRequestDto.getPassword())){
             message.setStatus(StatusEnum.BAD_REQUEST);
-            message.setMessage("비밀번호는 4자리이상 입력해주세요");
+            message.setMessage("비밀번호는 6자리이상인 영문,숫자로만 입력이 가능랍니다.");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+
+        if(!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordCheck())){
+            message.setStatus(StatusEnum.BAD_REQUEST);
+            message.setMessage("비밀번호가 일치하지 않습니다.");
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 
