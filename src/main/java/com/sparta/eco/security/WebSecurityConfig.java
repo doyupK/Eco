@@ -5,8 +5,6 @@ import com.sparta.eco.security.filter.JwtAuthFilter;
 import com.sparta.eco.security.jwt.HeaderTokenExtractor;
 import com.sparta.eco.security.provider.FormLoginAuthProvider;
 import com.sparta.eco.security.provider.JWTAuthProvider;
-import com.sparta.eco.web.WebMvcConfig;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +20,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +39,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**"
     };
 
-    private final WebMvcConfig webMvcConfig;
 
     @Autowired
     public WebSecurityConfig(
-            WebMvcConfig webMvcConfig,
             JWTAuthProvider jwtAuthProvider,
             HeaderTokenExtractor headerTokenExtractor
     ) {
-        this.webMvcConfig = webMvcConfig;
         this.jwtAuthProvider = jwtAuthProvider;
         this.headerTokenExtractor = headerTokenExtractor;
     }
@@ -90,15 +88,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          * FormLoginFilter : 로그인 인증을 실시합니다.
          * JwtFilter       : 서버에 접근시 JWT 확인 후 인증을 실시합니다.
          */
+        http.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
         http
                 .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .anyRequest()
                 .permitAll()
+                .and()
+                .cors()
                 .and()
                 // [로그아웃 기능]
                 .logout()
@@ -109,9 +112,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 // "접근 불가" 페이지 URL 설정
                 .accessDeniedPage("/forbidden.html");
+    }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -147,6 +162,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/user/**");
         skipPathList.add("POST,/user/signup");
         skipPathList.add("POST,/user/signup/check");
+        skipPathList.add("POST,/user/**");
 
         skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");
