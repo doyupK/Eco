@@ -75,7 +75,7 @@ public class CommentService {
         if(!Objects.equals(comment.getUsername(), userDetails.getUsername())){
             throw new IllegalArgumentException("작성자 정보와 틀립니다..");
         }
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(commentid);
 
         Message message = new Message();
         message.setStatus(StatusEnum.OK);

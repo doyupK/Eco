@@ -66,7 +66,7 @@ public class PostService {
         message.setMessage("OK");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-
+    @Transactional
     public ResponseEntity<Message> save(PostRequestDto requestDto, MultipartFile multipartFile, UserDetailsImpl userDetails) {
         if(userDetails==null){ throw new IllegalArgumentException("로그인이 필요한 서비스 입니다.");}
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
@@ -131,7 +131,7 @@ public class PostService {
         message.setResult(posts);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-
+    @Transactional
     public ResponseEntity<Message> deletePost(Long id, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("게시글이 존재하지 않습니다.")
@@ -149,7 +149,7 @@ public class PostService {
         message.setMessage("삭제 성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-
+    @Transactional
     public FileDataDto saveImage(MultipartFile multipartFile) {
         // 파일 이름
         String originalName = DateTime.now().toString().replaceAll("[+:]",".")+multipartFile.getOriginalFilename();
