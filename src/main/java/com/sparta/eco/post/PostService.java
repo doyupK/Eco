@@ -139,7 +139,9 @@ public class PostService {
         if(!Objects.equals(post.getUsername(), userDetails.getUsername())){
             throw new IllegalArgumentException("작성자 정보와 틀립니다..");
         }
+        commentRepository.deleteAllByPost(post);
         postRepository.deleteById(id);
+
 
         // S3 파일 삭제
         amazonS3Client.deleteObject(S3Bucket,post.getFileName());

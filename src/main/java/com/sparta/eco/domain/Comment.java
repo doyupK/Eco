@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -28,8 +30,9 @@ public class Comment {
     @Column(nullable = false)
     private String contents;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
-    @JoinColumn(name = "POST_ID", nullable = false)
+    @JoinColumn(name = "POST_ID")
     private Post post;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌

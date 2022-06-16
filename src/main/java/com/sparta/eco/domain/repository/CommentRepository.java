@@ -12,4 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<CommentDetailResponseDto> findAllByPostOrderByUpdatedAtDesc(Post post);
 
     Comment findByPostAndId(Post post, Long id);
+
+    void deleteAllByPost(Post Post);
 }
